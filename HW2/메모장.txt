@@ -1,0 +1,10 @@
+What to do:
+
+MovieDB.java, Node.java, MovieDBItem, MyLinkedListIterator
+
+
+
+
+*sort없이 된다?
+
+toString을 따로 구현하면 문제 없을 듯..
