@@ -69,9 +69,12 @@ public class SortingTest {
                     System.out.println((System.currentTimeMillis() - t) + " ms");
                 } else {
                     // 난수가 아닐 경우 정렬된 결과값을 출력한다.
+
+                    StringBuilder tmp = new StringBuilder();
                     for (int i = 0; i < newvalue.length; i++) {
-                        System.out.println(newvalue[i]);
+                        tmp.append(newvalue[i]+"\n");
                     }
+                    System.out.print(tmp);
                 }
 
             }
@@ -88,10 +91,11 @@ public class SortingTest {
         // 주어진 value 배열에서 안의 값만을 바꾸고 value를 다시 리턴하거나
         // 같은 크기의 새로운 배열을 만들어 그 배열을 리턴할 수도 있다.
         int n = value.length;
+        int tmp;
         for (int i = 1; i <= n; i++) {
             for (int j = 0; j < n - i; j++) {
                 if (value[j] > value[j + 1]) {
-                    int tmp = value[j + 1];
+                    tmp = value[j + 1];
                     value[j + 1] = value[j];
                     value[j] = tmp;
                 }
@@ -104,8 +108,9 @@ public class SortingTest {
     private static int[] DoInsertionSort(int[] value) {
         // TODO : Insertion Sort 를 구현하라.
         int n = value.length;
+        int ithValue;
         for (int i = 1; i < n; i++) {
-            int ithValue = value[i];
+            ithValue = value[i];
             for (int j = i - 1; j >= -1; j--) {
                 if (j==-1 || value[j] <= ithValue) {
                     value[j + 1] = ithValue;
@@ -195,8 +200,40 @@ public class SortingTest {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private static int[] DoMergeSort(int[] value) {
         // TODO : Merge Sort 를 구현하라.
-        mergeSort(value, 0, value.length - 1);
+        int[] B = new int[value.length];
+        for(int i = 0; i<value.length; i++) {
+            B[i] = value[i];
+        }
+        betterMergeSort(value, B, 0, value.length-1);
+        //mergeSort(value, 0, value.length - 1);
         return (value);
+    }
+
+    private static void betterMergeSort(int[] value, int[] tmp,  int s, int e) {
+        if (s < e) { //재귀 호출을 반복해가며 크기가 0또는 1인 부분 배열에서 되돌아가도록 한다.
+            int m = (s + e) / 2;
+            betterMergeSort(tmp, value, s, m);
+            betterMergeSort(tmp, value, m + 1, e);
+            // 위의 두 부분배열은 base 조건이나, merge() 를 통해 정렬된 두 배열이 된다.
+            betterMerge(tmp, value, s, m, e);
+        } else return;
+    }
+
+    private static void betterMerge(int[] tmp, int[] value, int s, int m, int e) {
+        int i = s;
+        int j = m + 1;
+        int t = s;
+        while ( i <= m && j <= e ){
+            if (tmp[i] <= tmp[j])
+                value[t++] = tmp[i++];
+            else
+                value[t++] = tmp[j++];
+        }
+        while (i <= m)
+            value[t++] = tmp[i++];
+        while (j <= e)
+            value[t++] = tmp[j++];
+
     }
 
     private static void mergeSort(int[] value, int s, int e) {
@@ -258,7 +295,8 @@ public class SortingTest {
         int startOfAreaThird = s;
         // 1, 2, 3구역은 각각 pivot 보다 작은, 큰, 미판별 구역
         while(startOfAreaThird <= e-1) {
-            if(value[startOfAreaThird] < pivot) { //  1구역으로 이동
+            if(value[startOfAreaThird] < pivot) {
+                //  1구역으로 이동
                 endOfAreaFirst++; //1구역 한 칸 늘리고
                 int tmp = value[startOfAreaThird];
                 value[startOfAreaThird] = value[endOfAreaFirst];
